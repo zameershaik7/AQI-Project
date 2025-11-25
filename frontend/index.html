@@ -1,38 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AQI Checker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AQI Dashboard – Premium Edition</title>
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- CHART.JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-  <div class="container">
-    <h1>🌍 Air Quality Index (AQI) Checker</h1>
+<body class="light">
 
-    <div class="search-box">
-      <input id="cityInput" type="text" placeholder="Enter city name..." />
-      <button onclick="fetchAQI()">Search</button>
+  <!-- PARTICLES -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- THEME SWITCH -->
+  <button id="themeToggle" class="theme-toggle">☀️</button>
+
+  <!-- HEADER -->
+  <header>
+    <h1 class="title">🌍 Premium AQI Dashboard</h1>
+    <p class="subtitle">Real-Time Air Quality Monitoring</p>
+  </header>
+
+  <!-- SEARCH BAR -->
+  <div class="search-container glass">
+    <div class="autocomplete">
+      <input 
+        type="text" 
+        id="cityInput" 
+        placeholder="Search for a city…" 
+        oninput="updateSuggestions(this.value)"
+      >
+      <ul id="suggestionBox" class="suggestions"></ul>
     </div>
 
-    <p id="error" class="error"></p>
-
-    <div id="resultCard" class="card hidden">
-      <h2 id="locationName"></h2>
-      <p id="aqiValue" class="aqi"></p>
-      <span id="aqiCategory" class="badge"></span>
-
-      <div class="details">
-        <p><strong>Dominant Pollutant:</strong> <span id="pollutant"></span></p>
-        <p><strong>Temperature:</strong> <span id="temp"></span>°C</p>
-        <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
-        <p><strong>Coordinates:</strong> <span id="coords"></span></p>
-        <p><strong>Last Updated:</strong> <span id="time"></span></p>
-      </div>
-    </div>
+    <!-- FIXED BUTTON WITH ID -->
+    <button id="searchBtn">Search</button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- LOADING SPINNER -->
+  <div id="loadingSpinner" class="spinner hidden"></div>
+
+  <!-- ERROR CARD -->
+  <div id="errorCard" class="error-card hidden glass">
+    <p id="errorMessage"></p>
+  </div>
+
+  <!-- RESULT CARD -->
+  <div class="result-card glass hidden" id="resultCard">
+
+    <!-- AQI RING -->
+    <div class="aqi-ring-container">
+      <svg class="aqi-ring" width="200" height="200">
+        <circle class="ring-bg" cx="100" cy="100" r="80"></circle>
+        <circle class="ring-progress" cx="100" cy="100" r="80"></circle>
+      </svg>
+
+      <div class="aqi-value" id="aqiValue">--</div>
+      <div class="aqi-category" id="aqiCategory">--</div>
+    </div>
+
+    <h2 id="cityName"></h2>
+
+    <div class="info-grid">
+      <div class="info-item">🌬️ Dominant: <span id="dominantPollutant"></span></div>
+      <div class="info-item">📍 Coordinates: <span id="coordinates"></span></div>
+      <div class="info-item">🌡️ Temperature: <span id="temperature"></span>°C</div>
+      <div class="info-item">💧 Humidity: <span id="humidity"></span>%</div>
+      <div class="info-item">🕒 Updated: <span id="time"></span></div>
+    </div>
+
+    <!-- POLLUTANTS -->
+    <div class="pollutant-cards" id="pollutantCards"></div>
+
+    <!-- SAFETY TIPS -->
+    <div id="safetyTips" class="safety-tips glass"></div>
+
+  </div>
+
+  <!-- HISTORY CHART -->
+  <div id="chartContainer" class="chart-container glass hidden">
+    <h3>AQI History</h3>
+    <canvas id="aqiChart"></canvas>
+  </div>
+
+  <!-- JS -->
+  <script src="script.js" defer></script>
 </body>
 </html>

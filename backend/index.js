@@ -1,18 +1,31 @@
-require("dotenv").config();
+// --------------------------------------------
+// IMPORTS
+// --------------------------------------------
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 const NodeCache = require("node-cache");
+require("dotenv").config();
 
+// --------------------------------------------
+// APP + MIDDLEWARE
+// --------------------------------------------
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
-// Cache AQI for 10 minutes to improve performance
+// Cache: 10 minutes TTL
 const cache = new NodeCache({ stdTTL: 600 });
 
-app.get("/api/v1/aqi", async (req, res) => {
-  const city = req.query.city;
+// --------------------------------------------
+// WAQI TOKEN
+// --------------------------------------------
+const TOKEN = process.env.WAQI_TOKEN;
 
+// --------------------------------------------
+// ROUTE: GET AQI BY CITY
+// --------------------------------------------
+app.get("/api/aqi", async (req, res) => {
+  const city = req.query.city;
   if (!city) {
     return res.status(400).json({ error: "City name is required" });
   }
@@ -24,46 +37,63 @@ app.get("/api/v1/aqi", async (req, res) => {
   }
 
   try {
-    // WAQI API endpoint
-    const url = `https://api.waqi.info/feed/${encodeURIComponent(
-      city
-    )}/?token=${process.env.WAQI_TOKEN}`;
+    // WAQI API URL
+    const url = `https://api.waqi.info/feed/${encodeURIComponent(city)}/?token=${TOKEN}`;
 
     const response = await axios.get(url);
 
     if (!response.data || response.data.status !== "ok") {
-      return res.status(404).json({
-        error: "City not found or WAQI API returned an error",
-        details: response.data
-      });
+      return res.status(404).json({ error: "City not found or WAQI returned an error" });
     }
 
-    const d = response.data.data;
+    const data = response.data.data;
 
-    const output = {
-      city: d.city?.name,
-      aqi: d.aqi,
-      dominantPollutant: d.dominentpol,
-      coordinates: d.city?.geo,
-      time: d.time?.s,
-      temperature: d.iaqi?.t?.v || null,
-      humidity: d.iaqi?.h?.v || null,
-      source: "WAQI API"
+    // --------------------------------------------
+    // Extract pollutant values
+    // --------------------------------------------
+    const pollutants = {
+      pm25: data.iaqi.pm25?.v || null,
+      pm10: data.iaqi.pm10?.v || null,
+      o3: data.iaqi.o3?.v || null,
+      no2: data.iaqi.no2?.v || null,
+      so2: data.iaqi.so2?.v || null,
+      co: data.iaqi.co?.v || null,
     };
 
-    cache.set(cacheKey, output);
-    return res.json({ source: "api", data: output });
-  } catch (err) {
-    console.log("====== BACKEND ERROR ======");
-    console.log("MESSAGE:", err.message);
-    console.log("STATUS:", err.response?.status);
-    console.log("RESPONSE:", err.response?.data);
-    console.log("============================");
+    // --------------------------------------------
+    // Final Response Object
+    // --------------------------------------------
+    const result = {
+      city: data.city.name,
+      aqi: data.aqi,
+      dominantPollutant: data.dominentpol || null,
+      coordinates: data.city.geo || [],
+      time: data.time.s || "",
+      temperature: data.iaqi.t?.v || null,
+      humidity: data.iaqi.h?.v || null,
+      pollutants: pollutants,       // << NEW FIELD
+    };
 
-    return res.status(500).json({ error: "Failed to fetch AQI from WAQI" });
+    // Cache the response
+    cache.set(cacheKey, result);
+
+    res.json({ source: "api", data: result });
+
+  } catch (error) {
+    console.log("============== BACKEND ERROR ==============");
+    console.log("Message:", error.message);
+    console.log("Status:", error.response?.status);
+    console.log("Response:", error.response?.data);
+    console.log("URL:", error.config?.url);
+    console.log("===========================================");
+
+    return res.status(500).json({ error: "Server error fetching AQI" });
   }
 });
 
+// --------------------------------------------
+// START SERVER
+// --------------------------------------------
 app.listen(5000, () => {
-  console.log("WAQI backend running at http://localhost:5000");
+  console.log("Backend running at http://localhost:5000");
 });

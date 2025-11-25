@@ -1,84 +1,240 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f3f5f7;
+/* RESET */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-.container {
-  width: 90%;
-  max-width: 500px;
-  margin: 50px auto;
-  text-align: center;
+body {
+  overflow-x: hidden;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
-h1 {
-  color: #222;
-}
-
-.search-box {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.search-box input {
-  width: 65%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.search-box button {
-  padding: 10px 18px;
-  border: none;
-  background: #0078ff;
+/* DARK / LIGHT MODE */
+body.dark {
+  background: #0e1320;
   color: white;
-  border-radius: 6px;
-  cursor: pointer;
 }
 
-.search-box button:hover {
-  background: #005fcc;
+body.light {
+  background: #eef7ff;
+  color: #111;
 }
 
-.error {
-  color: red;
-  font-size: 14px;
-  height: 20px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
+/* PARTICLES */
+#particleCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  border-radius: 15px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-  transition: 0.3s ease-in-out;
-  opacity: 1;
-}
-
-.hidden {
-  opacity: 0;
+  height: 100%;
   pointer-events: none;
+  z-index: -1;
 }
 
-.aqi {
-  font-size: 40px;
-  margin: 10px 0;
+/* GLASS */
+.glass {
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 18px;
+  transition: 0.3s ease;
+}
+
+body.dark .glass {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+body.light .glass {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* THEME BUTTON */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.4);
+  border: none;
+  padding: 12px;
+  font-size: 1.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.title {
+  font-size: 2.8rem;
   font-weight: bold;
 }
 
-.badge {
-  padding: 6px 12px;
-  color: white;
-  border-radius: 12px;
-  font-size: 14px;
+.subtitle {
+  opacity: 0.7;
 }
 
-.details {
-  margin-top: 15px;
-  text-align: left;
-  line-height: 1.6;
+/* SEARCH */
+.search-container {
+  width: 60%;
+  margin: 25px auto;
+  display: flex;
+  gap: 10px;
+}
+
+.autocomplete {
+  width: 75%;
+  position: relative;
+}
+
+.autocomplete input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+}
+
+.suggestions {
+  position: absolute;
+  width: 100%;
+  background: #222;
+  color: #fff;
+  list-style: none;
+  margin-top: 5px;
+  border-radius: 10px;
+  display: none;
+}
+
+.suggestions li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions li:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.search-container button {
+  padding: 14px 20px;
+  background: #00aaff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* SPINNER */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #bbb;
+  border-top: 6px solid #00eaff;
+  border-radius: 50%;
+  margin: 20px auto;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none; }
+
+/* RESULT CARD */
+.result-card {
+  width: 60%;
+  margin: 25px auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.5s ease;
+}
+
+.result-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* AQI RING */
+.aqi-ring-container { position: relative; width: 200px; margin: auto; }
+
+.aqi-ring { transform: rotate(-90deg); }
+
+.ring-bg {
+  stroke: #ccc;
+  stroke-width: 10;
+  fill: none;
+}
+.ring-progress {
+  stroke-width: 10;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 502;
+  stroke-dashoffset: 502;
+  transition: 1s ease;
+}
+
+.aqi-value {
+  position: absolute;
+  top: 65px;
+  width: 100%;
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: bold;
+}
+
+.aqi-category {
+  margin-top: 8px;
+  padding: 6px 15px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+/* INFO GRID */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 20px;
+  gap: 12px;
+}
+
+/* POLLUTANT CARDS */
+.pollutant-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.pollutant-card {
+  width: 140px;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  background: rgba(255,255,255,0.2);
+}
+
+body.light .pollutant-card { color: #000; }
+
+/* SAFETY TIPS */
+.safety-tips {
+  margin-top: 25px;
+  padding: 14px;
+  border-left: 5px solid;
+}
+
+/* CHART */
+.chart-container {
+  width: 65%;
+  margin: 35px auto;
+  padding: 25px;
+  text-align: center;
 }
