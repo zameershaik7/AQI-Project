@@ -1,133 +1,179 @@
-# Air Quality Index (AQI) Checker
+# 🌍 Premium AQI Dashboard  
+Real-time Air Quality Monitoring with Interactive UI, Trend Graphs, Pollutant Insights & Dark/Light Mode
 
-A full-stack AQI Search Application built as part of the Finfactor Technologies SDE assignment.
+---
 
-Users can search for any city and view AQI, dominant pollutant, temperature, humidity, coordinates, and last updated time. The backend includes caching for performance and reduced API calls.
+## 📌 Project Overview
+The **Premium AQI Dashboard** is a full-stack application that shows real-time Air Quality Index (AQI) for any city.  
+It includes a **Node.js backend**, a **modern animated frontend**, and powerful UI features like:
 
-# ✨ Features
+- 🌗 Dark/Light Mode  
+- 🌬 Floating Particle Background  
+- 📈 Live AQI Trend Graph  
+- 💠 Circular AQI Ring Animation  
+- 🔍 City Auto-Suggestion  
+- 🧪 Pollutant Cards  
+- 💡 Safety Tips (Based on AQI Category)  
+- ⚡ Cached Backend API for Fast Responses  
 
-## 🖥️ Frontend (HTML, CSS, JavaScript)
-- City search input
-- Clean and responsive UI
-- AQI result card with color-coded category
-- Temperature and humidity display
-- Proper error handling
+---
 
-## ⚙️ Backend (Node.js + Express)
-- REST API endpoint: /api/aqi?city=CityName
-- Fetches data from WAQI API
-- Server-side caching implemented using Node-Cache
-- Handles all edge cases and errors
-- Uses dotenv to protect API key
+## 🏗️ Tech Stack
 
-# 📁 Project Structure
+### Backend
+- Node.js  
+- Express  
+- Axios  
+- Node-Cache  
+- WAQI API  
 
+### Frontend
+- HTML5  
+- CSS3  
+- JavaScript  
+- Chart.js  
+- Canvas API  
+
+---
+
+## 📁 Project Structure
 ```
 AQI-Project/
 │
 ├── backend/
-│ ├── index.js
-│ ├── .env
-│ ├── package.json
-│ └── node_modules/
+│   ├── server.js
+│   ├── package.json
+│   ├── .env
+│   └── node_modules/
 │
 └── frontend/
-├── index.html
-├── style.css
-├── script.js
-├── server.js
-├── package.json
-└── node_modules/
+    ├── index.html
+    ├── style.css
+    ├── script.js
+    ├── server.js
+    ├── package.json
+    └── node_modules/
 ```
 
+---
 
-# 🛠 Technologies Used
+## 🔑 Environment Variables
+Create a `.env` file inside **backend**:
 
-## Backend:
-- Node.js
-- Express.js
-- Axios
-- Node-Cache
-- dotenv
+```
+WAQI_TOKEN=your_api_key_here
+PORT=5000
+```
 
-## Frontend:
-- HTML
-- CSS
-- Vanilla JavaScript
-- Express static server (for hosting UI)
+---
 
-# 🌐 API Provider Used
+## 🚀 How to Run the Project
 
-## WAQI API (World Air Quality Index)
-https://aqicn.org/api/
-
-### API Authentication Format:
-https://api.waqi.info/feed/{city}/?token=YOUR_API_KEY
-
-### .env Format:
-WAQI_API_KEY=your_api_key_here
-
-# 🏃 How to Run the Project
-
-## 1. Clone the Repository:
-git clone https://github.com/your-username/aqi-project.git
-cd aqi-project
-
-## 2. Backend Setup:
+### 1️⃣ Backend Setup
+```
 cd backend
 npm install
+node server.js
+```
+Backend runs at: **http://localhost:5000**
 
-Create `.env` inside backend:
-WAQI_API_KEY=your_api_key_here
+---
 
-Start backend:
-node index.js
-
-Backend runs at:
-http://localhost:5000
-
-## 3. Frontend Setup:
+### 2️⃣ Frontend Setup
+```
 cd frontend
 npm install
 node server.js
+```
+Frontend runs at: **http://localhost:3000**
 
-Frontend runs at:
-http://localhost:3000
+---
 
-# 📡 Backend API Documentation
+## 🌈 Frontend Features
 
-## GET /api/aqi?city={cityName}
+### 🔍 Smart City Search
+- Auto-suggestion dropdown  
+- Real-time filtering  
 
-### Example:
-http://localhost:5000/api/aqi?city=Delhi
+### 🌗 Dark & Light Theme
+- Smooth transitions  
+- Particle animation adapts to theme  
 
-### Sample Response:
+### 💠 AQI Circular Ring
+- Animated from 0 → AQI  
+- AQI category color-coded  
+
+### 📈 AQI Trend History Graph
+- Up to last 10 AQI values  
+- Smooth line animation  
+- Responsive  
+
+### 🧪 Pollutant Cards
+Shows live/mocked values for:
+- PM2.5  
+- PM10  
+- CO  
+- O₃  
+- NO₂  
+- SO₂  
+
+### 💡 Safety Tips
+Tips update based on AQI category:
+- Good  
+- Moderate  
+- Unhealthy  
+- Very Unhealthy  
+- Hazardous  
+
+---
+
+## ⚙️ Backend Features
+
+### 📡 WAQI API Integration
+Fetches AQI, temperature, humidity, dominant pollutant & more.
+
+### ⚡ Caching
+- Faster repeated searches  
+- API rate-limiting protection  
+- Cache expiration included  
+
+---
+```
+## 🎨 AQI Color Mapping
+
+| AQI Range | Color | Category |
+|----------|--------|----------|
+| 0–100 | 🟢 Green | Good |
+| 101–150 | 🟠 Orange | Moderate |
+| 151–250 | 🔴 Red | Unhealthy |
+| 251–350 | 🟣 Purple | Very Unhealthy |
+| 351–500 | 🟤 Maroon | Hazardous |
+```
+---
+
+## 🧪 Sample API Response
+```
 {
-  "source": "api",
-  "data": {
-    "city": "Major Dhyan Chand National Stadium, Delhi, India",
-    "aqi": 213,
-    "dominantPollutant": "pm25",
-    "temperature": 14.6,
-    "humidity": 82,
-    "coordinates": [28.612498, 77.237388],
-    "time": "2025-11-25 00:00:00"
+  "city": "Delhi",
+  "aqi": 163,
+  "dominantPollutant": "pm25",
+  "temperature": 21.3,
+  "humidity": 45,
+  "coordinates": [28.6, 77.2],
+  "pollutants": {
+    "pm25": 163,
+    "pm10": 120,
+    "o3": 77,
+    "no2": 18,
+    "so2": 10,
+    "co": 3.4
   }
 }
+```
 
-# ⚡ Caching Logic
+---
 
-- Cache TTL: 10 minutes  
-- Reduces external API calls  
-- Improves UI response speed  
-- Meets the assignment's performance requirement
+## 🏆 Author
+**Zameer Ur Rahiman Shaik**  
+Aspiring AI Engineer & Software Developer
 
-# 🏁 Final Notes
-
-This solution fully meets the coding challenge requirements:
-- Node.js REST API
-- Caching with expiry
-- Clean structured frontend
-- Proper documentation
-- Runs fully locally
-- Error handling included
