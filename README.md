@@ -122,13 +122,6 @@ http://localhost:5000/api/aqi?city=Delhi
 - Improves UI response speed  
 - Meets the assignment's performance requirement
 
-# 📬 Submission Notes
-
-- Upload the project to a **public GitHub repo**
-- Reply to the assignment email
-- **Do not change the subject line**
-- Include your GitHub repository link in the message body
-
 # 🏁 Final Notes
 
 This solution fully meets the coding challenge requirements:
