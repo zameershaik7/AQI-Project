@@ -21,6 +21,8 @@ Users can search for any city and view AQI, dominant pollutant, temperature, hum
 - Uses dotenv to protect API key
 
 # 📁 Project Structure
+
+```
 AQI-Project/
 │
 ├── backend/
@@ -36,6 +38,7 @@ AQI-Project/
 ├── server.js
 ├── package.json
 └── node_modules/
+```
 
 
 # 🛠 Technologies Used
